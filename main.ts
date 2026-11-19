@@ -137,24 +137,24 @@ function numberedBadge(cx: number, cy: number, n: number, r: number, bgColor: st
 svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
 
 // Layout Constants
-const ROW1_Y = 118;
-const ROW1_H = 180;
+const ROW1_Y = 134;
+const ROW1_H = 172;
 const ROW1_GAP = 6;
 const ROW1_COLS = 4;
 const ROW1_X0 = 8;
 const ROW1_CW = Math.floor((W - 2 * ROW1_X0 - (ROW1_COLS - 1) * ROW1_GAP) / ROW1_COLS);
-const ILLUS_H = 72;
+const ILLUS_H = 66;
 
-const ROW2_Y = 302;
-const ROW2_H = 152;
+const ROW2_Y = 310;
+const ROW2_H = 146;
 const ROW2_GAP = 5;
 const ROW2_COLS = 6;
 const ROW2_X0 = 8;
 const ROW2_CW = Math.floor((W - 2 * ROW2_X0 - (ROW2_COLS - 1) * ROW2_GAP) / ROW2_COLS);
 const MINI_H = 36;
 
-const ROW3_Y = 458;
-const ROW3_H = 152;
+const ROW3_Y = 460;
+const ROW3_H = 146;
 const ROW3_CW = ROW2_CW;
 
 // Defs for gradients & clipPaths
@@ -244,7 +244,26 @@ timeslots.forEach((slot, i) => {
   circle(sx + slotW/2, 113, 1, GOLD, 0.6);
 });
 line(4, 114, W-4, 114, GOLD, 0.8);
-line(4, 114, W-4, 114, HAIRLINE, 0.5);
+// ── CREAM MICRO-CAPTION SUB-STRIP (y=114..130) ─────────────────────────
+rect(4, 114, barTotalW, 16, '#F5F1E6');
+line(4, 114, W-4, 114, '#D4CFC5', 0.5);
+const microCaptions = [
+  ['Drones over', 'Kuwait, Bahrain'],
+  ['UK inflation:', '3.6%'],
+  ['Xi greets Trump', 'in Shenzhen'],
+  ['Voyager 1: one', 'light-day'],
+  ['GTA VI unlocks', 'in NZ'],
+  ['Fed minutes:', 'more hikes'],
+  ['Dow closes', 'down 561'],
+  ['Anthropic prices', 'record IPO'],
+];
+microCaptions.forEach((cap, i) => {
+  const sx = 100 + i * slotW;
+  text(sx + slotW / 2, 122, cap[0], 4.5, '#5A6474', { anchor: 'middle' });
+  text(sx + slotW / 2, 128, cap[1], 4.5, '#1E293B', { anchor: 'middle', bold: true });
+  if (i > 0) line(sx, 116, sx, 128, '#D4CFC5', 0.3);
+});
+line(4, 130, W-4, 130, '#D4CFC5', 0.5);
 
 // ═══════════════════════════════════════════════════════════════════════════
 // 2. 16-CARD VISUAL GRID
@@ -298,125 +317,158 @@ row1Cards.forEach((card, i) => {
   R(`<g clip-path="url(#clip-banner-${card.num})">`);
 
   if (i === 0) {
-    // CARD 1: KUWAIT & BAHRAIN INTERCEPT — Lightened pale sea & sand background
-    rect(ix, iy, iw, ih, '#E5DEC9', 3); // Warm sand base
-    // Gulf water in pale sea blue
-    R(`<path d="M${ix+10},${iy+22} L${ix+80},${iy+10} L${ix+150},${iy+24} L${ix+iw-18},${iy+42} L${ix+iw-28},${iy+60} L${ix+120},${iy+ih-2} L${ix+60},${iy+ih-5} L${ix+18},${iy+56} Z" fill="#DCE8F2" stroke="#93C5FD" stroke-width="0.8"/>`);
-    // Subtle tactical grid
-    for (let g = 0; g < 6; g++) line(ix, iy + g * 13, ix + iw, iy + g * 13, '#CBD5E1', 0.4, '2,4');
-    for (let g = 0; g < 7; g++) line(ix + g * 36, iy, ix + g * 36, iy + ih, '#CBD5E1', 0.4, '2,4');
-    // Kuwait pin + Patriot burst
-    const kx = ix + iw - 55, ky = iy + 26;
-    circle(kx, ky, 3.5, '#D97706');
-    for (let r = 7; r <= 16; r += 4.5) circle(kx, ky, r, 'none', 0.4, '#D97706', 0.8);
-    text(kx, ky - 7, 'KUWAIT', 5, '#1E293B', { anchor: 'middle', bold: true });
-    // Bahrain pin + burst
-    const bx = ix + 65, by = iy + 42;
-    circle(bx, by, 3.5, '#DC2626');
-    for (let r = 7; r <= 16; r += 4.5) circle(bx, by, r, 'none', 0.4, '#DC2626', 0.8);
-    text(bx, by - 7, 'BAHRAIN', 5, '#1E293B', { anchor: 'middle', bold: true });
-    // Qeshm label & dashed missile arcs from Iran
-    text(ix + iw - 6, iy + ih - 6, 'QESHM', 4.5, '#1E293B', { anchor: 'end', bold: true });
+    // CARD 1: GULF DRONES — Crisp blue Persian Gulf map & sand coastlines
+    rect(ix, iy, iw, ih, '#CFE3F5', 3); // Pale blue Gulf water
+    // Sand coastlines on edges
+    R(`<path d="M${ix},${iy} L${ix+30},${iy} L${ix+20},${iy+18} L${ix+10},${iy+32} L${ix},${iy+42} Z" fill="#E5DEC9"/>`);
+    R(`<path d="M${ix+iw-50},${iy} L${ix+iw},${iy} L${ix+iw},${iy+ih} L${ix+iw-30},${iy+ih} L${ix+iw-18},${iy+40} L${ix+iw-35},${iy+20} Z" fill="#E5DEC9"/>`);
+    R(`<path d="M${ix},${iy+ih-14} L${ix+50},${iy+ih} L${ix},${iy+ih} Z" fill="#E5DEC9"/>`);
+    // Tactical grid
+    for (let g = 0; g < 6; g++) line(ix, iy + g * 11, ix + iw, iy + g * 11, '#A8C8E8', 0.3, '2,4');
+    for (let g = 0; g < 8; g++) line(ix + g * 30, iy, ix + g * 30, iy + ih, '#A8C8E8', 0.3, '2,4');
+    // Kuwait pin + radar rings
+    const kx = ix + iw - 60, ky = iy + 20;
+    circle(kx, ky, 3, '#D97706');
+    for (let r = 6; r <= 18; r += 4) circle(kx, ky, r, 'none', 0.35, '#D97706', 0.7);
+    text(kx, ky - 6, 'KUWAIT', 5.5, '#1E293B', { anchor: 'middle', bold: true });
+    // Bahrain pin + radar rings
+    const bx = ix + 55, by = iy + 38;
+    circle(bx, by, 3, '#DC2626');
+    for (let r = 6; r <= 18; r += 4) circle(bx, by, r, 'none', 0.35, '#DC2626', 0.7);
+    text(bx, by - 6, 'BAHRAIN', 5.5, '#1E293B', { anchor: 'middle', bold: true });
+    // QESHM label on Iran coast
+    text(ix + iw - 8, iy + 10, 'QESHM', 4.5, '#7C2D12', { anchor: 'end', bold: true });
+    // Dashed red missile arcs from Qeshm
     for (let arc = 0; arc < 3; arc++) {
-      const aOff = arc * 10 - 10;
-      R(`<path d="M${ix+iw-5},${iy+28+aOff} Q${ix+iw-30},${iy+5} ${bx},${by}" fill="none" stroke="#DC2626" stroke-width="0.9" stroke-dasharray="3,2" opacity="0.7"/>`);
+      const aOff = arc * 8 - 8;
+      R(`<path d="M${ix+iw-10},${iy+14+aOff} Q${ix+iw-40},${iy+2} ${bx},${by}" fill="none" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/>`);
     }
     for (let arc = 0; arc < 2; arc++) {
-      R(`<path d="M${ix+iw-5},${iy+18+arc*14} Q${ix+iw-20},${iy+8} ${kx},${ky}" fill="none" stroke="#D97706" stroke-width="0.9" stroke-dasharray="3,2" opacity="0.7"/>`);
+      R(`<path d="M${ix+iw-10},${iy+10+arc*12} Q${ix+iw-28},${iy+4} ${kx},${ky}" fill="none" stroke="#D97706" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/>`);
     }
-    // Patriot interception X marks
-    R(`<text x="${ix+102}" y="${iy+30}" font-family="Arial" font-size="8" fill="#16A34A" font-weight="bold" text-anchor="middle">\u00D7</text>`);
-    R(`<text x="${ix+122}" y="${iy+22}" font-family="Arial" font-size="8" fill="#16A34A" font-weight="bold" text-anchor="middle">\u00D7</text>`);
-    text(ix + iw / 2, iy + ih - 3, 'PERSIAN GULF \u00B7 HIGH ALERT', 4.5, '#475569', { anchor: 'middle', bold: true });
+    // Orange starburst interceptions
+    for (const [sx2,sy2] of [[ix+95,iy+24],[ix+115,iy+18],[ix+80,iy+32]]) {
+      R(`<polygon points="${sx2},${sy2-4} ${sx2+2},${sy2-1} ${sx2+4},${sy2} ${sx2+2},${sy2+1} ${sx2},${sy2+4} ${sx2-2},${sy2+1} ${sx2-4},${sy2} ${sx2-2},${sy2-1}" fill="#F97316" opacity="0.85"/>`);
+    }
+    // Dark caption bar
+    rect(ix, iy + ih - 11, iw, 11, '#1E293B', 0, 0.85);
+    text(ix + iw / 2, iy + ih - 3, 'PERSIAN GULF \u00B7 PATRIOT INTERCEPT', 4.5, '#F5F1E6', { anchor: 'middle', bold: true });
 
   } else if (i === 1) {
-    // CARD 2: XI GREETS TRUMP — Daylight sky & tarmac with dark readable text
-    rect(ix, iy, iw, ih, '#E4EDF5', 3); // Daylight sky
-    rect(ix, iy + ih - 18, iw, 18, '#D8D3C8'); // Daylight tarmac
-    // Red carpet
-    rect(ix + 68, iy + ih - 18, 84, 18, '#B91C1C', 0, 0.7);
-    rect(ix + 88, iy + ih - 16, 44, 2, '#D4A843', 0, 0.6);
-    // Runway dashes
-    for (let r = 0; r < 5; r++) line(ix + 18 + r * 42, iy + ih - 6, ix + 18 + r * 42, iy + ih - 1, '#FFFFFF', 1.5, '3,2');
-    // Airliner tail fin (right side)
-    R(`<path d="${`M${ix+iw-70},${iy+ih-28} L${ix+iw-18},${iy+ih-28} L${ix+iw-15},${iy+ih-24} L${ix+iw-15},${iy+ih-18} L${ix+iw-70},${iy+ih-18} Z`}" fill="#CBD5E1"/>`);
-    R(`<path d="${`M${ix+iw-62},${iy+ih-28} L${ix+iw-56},${iy+ih-38} L${ix+iw-50},${iy+ih-28}`}" fill="#3B82F6"/>`);
-    // Flags on poles: China, US
-    const flagData = [
-      { x: ix + 15, c1: '#DE2910', c2: '#FBBF24' },
-      { x: ix + 40, c1: '#1D4ED8', c2: '#B91C1C' },
-    ];
-    for (const f of flagData) {
-      line(f.x, iy + 6, f.x, iy + 26, '#64748B', 1);
-      rect(f.x + 1, iy + 7, 16, 10, f.c1);
-      rect(f.x + 1, iy + 10, 16, 3.5, f.c2, 0, 0.7);
+    // CARD 2: SHENZHEN APEC — Warm sunlit sky, tarmac, airliner, red carpet
+    R(`<rect x="${ix}" y="${iy}" width="${iw}" height="${ih}" rx="3" fill="#DCE9F5"/>`);
+    // Warm sky gradient effect
+    rect(ix, iy, iw, 18, '#C7DDF0', 3);
+    // Perspective tarmac
+    R(`<path d="M${ix},${iy+ih-20} L${ix+iw},${iy+ih-22} L${ix+iw},${iy+ih} L${ix},${iy+ih} Z" fill="#D6D1C4"/>`);
+    // Tarmac lines
+    for (let r = 0; r < 6; r++) line(ix + 12 + r * 38, iy + ih - 6, ix + 12 + r * 38, iy + ih - 1, '#FFFFFF', 1.5, '3,2');
+    // Red carpet centered
+    rect(ix + 60, iy + ih - 20, 90, 20, '#B91C1C', 0, 0.75);
+    rect(ix + 78, iy + ih - 18, 54, 2, '#D4A843', 0, 0.6);
+    // White airliner fuselage on left
+    R(`<path d="M${ix+5},${iy+ih-26} L${ix+70},${iy+ih-26} L${ix+72},${iy+ih-22} L${ix+72},${iy+ih-20} L${ix+5},${iy+ih-20} Z" fill="#E2E8F0" stroke="#94A3B8" stroke-width="0.5"/>`);
+    // Tail fin
+    R(`<path d="M${ix+8},${iy+ih-26} L${ix+14},${iy+ih-38} L${ix+22},${iy+ih-26}" fill="#3B82F6"/>`);
+    // Windows
+    for (let w = 0; w < 8; w++) rect(ix + 24 + w * 6, iy + ih - 25, 3, 2, '#64748B', 1, 0.5);
+    // Flags on poles: China flag, US flag
+    for (const [fx2, c1, c2] of [[ix+iw-55,'#DE2910','#FBBF24'],[ix+iw-35,'#1D4ED8','#B91C1C']] as [number,string,string][]) {
+      line(fx2, iy + 4, fx2, iy + 28, '#64748B', 1);
+      rect(fx2 + 1, iy + 5, 16, 11, c1);
+      rect(fx2 + 1, iy + 9, 16, 3.5, c2, 0, 0.6);
     }
-    // 3 diplomat silhouettes
-    const dipX = [ix + 98, ix + 118, ix + 138];
-    for (const dx of dipX) {
-      circle(dx, iy + ih - 26, 4, '#1E293B');
-      rect(dx - 4, iy + ih - 22, 8, 7, '#1E293B');
+    // 3 diplomat silhouettes on carpet
+    for (const dx of [ix + 90, ix + 108, ix + 126]) {
+      circle(dx, iy + ih - 28, 3.5, '#1E293B');
+      R(`<path d="M${dx-3},${iy+ih-24} L${dx-5},${iy+ih-16} L${dx+5},${iy+ih-16} L${dx+3},${iy+ih-24} Z" fill="#1E293B"/>`);
     }
-    text(ix + iw / 2, iy + ih - 2, 'SHENZHEN \u00B7 BAOAN INTERNATIONAL', 4.5, '#475569', { anchor: 'middle', bold: true });
+    // Dark banner label
+    rect(ix, iy + ih - 10, iw, 10, '#1E293B', 0, 0.8);
+    text(ix + iw / 2, iy + ih - 3, "SHENZHEN BAO'AN", 4.5, '#F5F1E6', { anchor: 'middle', bold: true });
 
   } else if (i === 2) {
-    // CARD 3: SPLIT — Kyiv dusk navy LEFT, EU blue RIGHT
+    // CARD 3: SPLIT — Deep dusk Kyiv LEFT, EU royal blue RIGHT
     const halfW = Math.floor(iw / 2);
-    rect(ix, iy, halfW, ih, '#0B0F19', 3); // Retained dusk navy on left
-    // Kyiv skyline
-    R(`<path d="M${ix},${iy+ih} L${ix},${iy+ih-10} L${ix+10},${iy+ih-14} L${ix+18},${iy+ih-10} L${ix+28},${iy+ih-18} L${ix+34},${iy+ih-24} L${ix+38},${iy+ih-18} L${ix+50},${iy+ih-12} L${ix+60},${iy+ih-16} L${ix+70},${iy+ih-10} L${ix+85},${iy+ih-14} L${ix+halfW},${iy+ih-10} L${ix+halfW},${iy+ih} Z" fill="#1E293B"/>`);
-    // V-shaped drones
-    for (let d = 0; d < 5; d++) {
-      const dx = ix + 10 + d * 20, dy = iy + 6 + (d % 3) * 7;
-      R(`<path d="M${dx-3},${dy+3} L${dx},${dy} L${dx+3},${dy+3}" fill="none" stroke="#94A3B8" stroke-width="0.7"/>`);
+    // LEFT: Deep dusk sky
+    R(`<rect x="${ix}" y="${iy}" width="${halfW}" height="${ih}" rx="3" fill="#1E293B"/>`);
+    R(`<rect x="${ix}" y="${iy}" width="${halfW}" height="${20}" rx="3" fill="#0B0F19"/>`);
+    // Kyiv cathedral/city skyline
+    R(`<path d="M${ix},${iy+ih} L${ix},${iy+ih-12} L${ix+8},${iy+ih-16} L${ix+14},${iy+ih-12} L${ix+22},${iy+ih-20} L${ix+28},${iy+ih-28} L${ix+30},${iy+ih-32} L${ix+32},${iy+ih-28} L${ix+40},${iy+ih-14} L${ix+50},${iy+ih-18} L${ix+58},${iy+ih-14} L${ix+68},${iy+ih-10} L${ix+80},${iy+ih-16} L${ix+halfW},${iy+ih-12} L${ix+halfW},${iy+ih} Z" fill="#374151"/>`);
+    // Cathedral dome detail
+    R(`<path d="M${ix+28},${iy+ih-28} Q${ix+30},${iy+ih-36} ${ix+32},${iy+ih-28}" fill="#475569"/>`);
+    // Incoming Shahed drone silhouettes (V-shapes)
+    for (let d = 0; d < 6; d++) {
+      const dx = ix + 6 + d * 15, dy = iy + 4 + (d % 3) * 6;
+      R(`<path d="M${dx-4},${dy+3} L${dx},${dy} L${dx+4},${dy+3}" fill="none" stroke="#94A3B8" stroke-width="0.8"/>`);
     }
+    // Yellow radar searchlight beams
+    R(`<path d="M${ix+20},${iy+ih-12} L${ix+5},${iy+4} L${ix+15},${iy+4} Z" fill="#FBBF24" opacity="0.12"/>`);
+    R(`<path d="M${ix+60},${iy+ih-14} L${ix+50},${iy+2} L${ix+65},${iy+2} Z" fill="#FBBF24" opacity="0.1"/>`);
     // Flak bursts
-    circle(ix + 30, iy + 10, 2.5, '#FBBF24', 0.5);
-    circle(ix + 65, iy + 14, 2, '#F97316', 0.4);
-    text(ix + 5, iy + ih - 4, '141 DRONES', 4.5, '#94A3B8', { bold: true });
+    circle(ix + 25, iy + 10, 3, '#FBBF24', 0.5);
+    circle(ix + 55, iy + 8, 2, '#F97316', 0.45);
+    circle(ix + 42, iy + 14, 2.5, '#FBBF24', 0.35);
+    text(ix + 4, iy + ih - 3, '141 DRONES \u00B7 126 DOWNED', 4, '#94A3B8', { bold: true });
 
-    // Right half: EU blue with stars + €45bn
-    rect(ix + halfW, iy, iw - halfW, ih, '#1E3A8A', 3);
-    const ecx = ix + halfW + 28, ecy = iy + ih / 2 - 4;
+    // RIGHT: Royal blue EU panel
+    rect(ix + halfW, iy, iw - halfW, ih, '#1D4ED8', 3);
+    // 12-star EU circle
+    const ecx = ix + halfW + 24, ecy = iy + ih / 2 - 6;
     for (let s = 0; s < 12; s++) {
       const angle = (s * Math.PI * 2) / 12 - Math.PI / 2;
-      const sx = ecx + 10 * Math.cos(angle);
-      const sy = ecy + 10 * Math.sin(angle);
+      const sx2 = ecx + 11 * Math.cos(angle);
+      const sy2 = ecy + 11 * Math.sin(angle);
       let starP = '';
       for (let p = 0; p < 10; p++) {
         const a = (p * Math.PI / 5) - Math.PI / 2;
-        const rr = p % 2 === 0 ? 2.2 : 0.9;
-        starP += (p === 0 ? 'M' : 'L') + `${sx + rr * Math.cos(a)},${sy + rr * Math.sin(a)}`;
+        const rr = p % 2 === 0 ? 2.5 : 1.0;
+        starP += (p === 0 ? 'M' : 'L') + `${sx2 + rr * Math.cos(a)},${sy2 + rr * Math.sin(a)}`;
       }
       starP += 'Z';
       R(`<path d="${starP}" fill="#FBBF24"/>`);
     }
-    text(ix + iw - 8, iy + ih / 2 + 6, '\u20AC45bn', 15, '#FBBF24', { bold: true, serif: true, anchor: 'end' });
-    line(ix + halfW, iy, ix + halfW, iy + ih, '#94A3B8', 0.6);
+    // Bold €45bn
+    text(ix + iw - 6, iy + ih / 2 - 2, '\u20AC45bn', 16, '#FBBF24', { bold: true, serif: true, anchor: 'end' });
+    text(ix + iw - 6, iy + ih - 6, 'LOAN FOR KYIV', 4.5, '#93C5FD', { bold: true, anchor: 'end' });
+    // Divider
+    line(ix + halfW, iy, ix + halfW, iy + ih, '#93C5FD', 0.6);
 
   } else {
-    // CARD 4: VOYAGER 1 — Deep space black RETAINED
+    // CARD 4: VOYAGER 1 — Deep space with sun, orbital arcs, signal beam, probe
     rect(ix, iy, iw, ih, '#0B0F19', 3);
-    const seeds = [[0.08,0.2],[0.2,0.6],[0.35,0.1],[0.5,0.7],[0.65,0.3],[0.8,0.8],[0.9,0.15],[0.15,0.85],[0.45,0.5],[0.72,0.5],[0.28,0.4],[0.55,0.9],[0.88,0.5]];
-    for (const [sx, sy] of seeds) circle(ix + sx * iw, iy + sy * ih, 0.5 + (sx * 7 % 1) * 0.5, WHITE, 0.3 + sy * 0.4);
-    circle(ix + 16, iy + ih / 2, 10, '#FBBF24', 0.12);
-    circle(ix + 16, iy + ih / 2, 6, '#FBBF24');
-    circle(ix + 16, iy + ih / 2, 4, '#FDE68A');
-    R(`<path d="M${ix+6},${iy+ih-8} Q${ix+iw/2},${iy-18} ${ix+iw-6},${iy+ih-8}" fill="none" stroke="#38BDF8" stroke-width="0.5" stroke-dasharray="4,3" opacity="0.3"/>`);
-    let arcPath = `M${ix+26},${iy+ih/2}`;
-    for (let t = 1; t <= 20; t++) {
-      const f = t / 20;
-      arcPath += ` L${ix + 26 + f * (iw - 48)},${iy + ih / 2 - Math.sin(f * Math.PI * 0.5) * (ih * 0.28)}`;
+    // Star field
+    const seeds = [[0.08,0.2],[0.2,0.6],[0.35,0.1],[0.5,0.7],[0.65,0.3],[0.8,0.8],[0.9,0.15],[0.15,0.85],[0.45,0.5],[0.72,0.5],[0.28,0.4],[0.55,0.9],[0.88,0.5],[0.12,0.4],[0.62,0.15],[0.78,0.6],[0.42,0.85],[0.95,0.4]];
+    for (const [sx2, sy2] of seeds) circle(ix + sx2 * iw, iy + sy2 * ih, 0.4 + (sx2 * 7 % 1) * 0.6, WHITE, 0.25 + sy2 * 0.45);
+    // Glowing golden Sun on left
+    circle(ix + 18, iy + ih / 2, 12, '#FBBF24', 0.08);
+    circle(ix + 18, iy + ih / 2, 8, '#FBBF24', 0.15);
+    circle(ix + 18, iy + ih / 2, 6, '#FBBF24');
+    circle(ix + 18, iy + ih / 2, 4, '#FDE68A');
+    // Orbital arcs from Sun
+    for (const [orx, ory] of [[16,8],[24,14],[34,20]]) {
+      R(`<ellipse cx="${ix+18}" cy="${iy+ih/2}" rx="${orx}" ry="${ory}" fill="none" stroke="#475569" stroke-width="0.4" stroke-dasharray="2,3" opacity="0.4"/>`);
     }
-    R(`<path d="${arcPath}" fill="none" stroke="#38BDF8" stroke-width="1" stroke-dasharray="4,3"/>`);
-    const px = ix + iw - 20, py = iy + ih / 2 - 14;
-    rect(px - 3, py - 2, 6, 4, '#A5F3FC');
-    line(px - 12, py, px - 3, py, '#A5F3FC', 0.8);
-    line(px + 3, py, px + 12, py, '#A5F3FC', 0.8);
-    R(`<path d="M${px - 2},${py - 2} L${px},${py - 9} L${px + 2},${py - 2}" fill="none" stroke="#A5F3FC" stroke-width="0.7"/>`);
-    rect(ix + iw / 2 - 50, iy + ih - 14, 100, 11, '#0F172A', 2);
-    text(ix + iw / 2, iy + ih - 5.5, '1 LIGHT-DAY \u00B7 25.9B KM', 5.5, '#38BDF8', { anchor: 'middle', bold: true });
-    R(`<path d="M${px},${py-9} Q${px-10},${py-20} ${px-25},${py-18}" fill="none" stroke="#38BDF8" stroke-width="0.4" stroke-dasharray="2,2" opacity="0.5"/>`);
+    // Dashed signal beam from Sun to probe
+    const px = ix + iw - 22, py = iy + ih / 2 - 10;
+    R(`<path d="M${ix+26},${iy+ih/2} L${px-8},${py}" fill="none" stroke="#38BDF8" stroke-width="1.2" stroke-dasharray="4,3"/>`);
+    // Detailed Voyager probe: dish + body + booms
+    // Dish
+    R(`<ellipse cx="${px}" cy="${py-2}" rx="7" ry="4" fill="#D4A843" stroke="#B8942F" stroke-width="0.5"/>`);
+    // Feed horn
+    line(px, py - 6, px, py - 12, '#A5F3FC', 0.8);
+    circle(px, py - 12, 1.2, '#A5F3FC');
+    // Probe body
+    rect(px - 3, py + 1, 6, 8, '#E2E8F0', 1);
+    rect(px - 2, py + 2, 4, 6, '#94A3B8', 0);
+    // Magnetometer booms
+    line(px - 3, py + 5, px - 14, py + 2, '#A5F3FC', 0.6);
+    line(px + 3, py + 5, px + 14, py + 2, '#A5F3FC', 0.6);
+    // RTG
+    rect(px + 10, py, 6, 4, '#D97706', 1);
+    // Dark label badge
+    rect(ix + iw / 2 - 52, iy + ih - 13, 104, 11, '#0F172A', 2, 0.9);
+    text(ix + iw / 2, iy + ih - 4.5, '1 LIGHT-DAY \u00B7 25.9B KM', 5.5, '#38BDF8', { anchor: 'middle', bold: true });
   }
   R(`</g>`);
 
@@ -501,85 +553,159 @@ row2Cards.forEach((card, i) => {
   R(`<g clip-path="url(#clip-banner-${card.num})">`);
 
   if (card.num === 5) {
-    // GAZA — Desert terrain & sky
+    // GAZA — Warm desert sky & sand, tank silhouette, barrier blocks, YELLOW LINE
     rect(mx, my, mw, mh, '#D2B48C', 3);
-    rect(mx, my, mw, 10, '#87CEEB', 3);
-    const tx = mx + 15;
-    rect(tx, my + mh - 12, 32, 7, '#1E293B', 1);
-    rect(tx + 8, my + mh - 18, 16, 7, '#1E293B', 1);
-    line(tx + 24, my + mh - 15, tx + 38, my + mh - 16, '#1E293B', 1.5);
-    rect(tx - 1, my + mh - 7, 34, 3, '#374151', 1);
-    for (let b = 0; b < 4; b++) rect(mx + 80 + b * 14, my + mh - 10, 10, 8, '#6B7280', 1, 0.7);
-    line(mx, my + mh - 2, mx + mw, my + mh - 2, '#FBBF24', 1.5, '6,3');
-    text(mx + mw - 4, my + mh - 5, 'YELLOW LINE', 4, '#92400E', { anchor: 'end', bold: true });
+    // Warm desert sky
+    R(`<rect x="${mx}" y="${my}" width="${mw}" height="12" rx="3" fill="#E8C98A"/>`);
+    R(`<rect x="${mx}" y="${my}" width="${mw}" height="6" rx="3" fill="#C9A96E"/>`);
+    // Detailed armored tank silhouette
+    const tx = mx + 10;
+    // Hull
+    R(`<path d="M${tx},${my+mh-8} L${tx+2},${my+mh-14} L${tx+36},${my+mh-14} L${tx+38},${my+mh-8} Z" fill="#374151"/>`);
+    // Turret
+    R(`<path d="M${tx+10},${my+mh-14} L${tx+12},${my+mh-20} L${tx+28},${my+mh-20} L${tx+30},${my+mh-14} Z" fill="#1E293B"/>`);
+    // Gun barrel
+    line(tx + 30, my + mh - 18, tx + 50, my + mh - 19, '#1E293B', 2);
+    // Tracks
+    R(`<path d="M${tx-2},${my+mh-6} L${tx+40},${my+mh-6}" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"/>`);
+    for (let w = 0; w < 6; w++) line(tx + 2 + w * 7, my + mh - 8, tx + 2 + w * 7, my + mh - 5, '#4B5563', 0.8);
+    // Concrete barrier blocks
+    for (let b = 0; b < 4; b++) {
+      const bx2 = mx + 72 + b * 14;
+      R(`<path d="M${bx2},${my+mh-3} L${bx2+2},${my+mh-10} L${bx2+10},${my+mh-10} L${bx2+12},${my+mh-3} Z" fill="#9CA3AF" stroke="#6B7280" stroke-width="0.4"/>`);
+    }
+    // YELLOW LINE
+    line(mx, my + mh - 2, mx + mw, my + mh - 2, '#FBBF24', 2);
+    // Bold banner
+    rect(mx + mw - 56, my + 2, 54, 10, '#92400E', 2, 0.85);
+    text(mx + mw - 29, my + 9.5, 'YELLOW LINE', 4.5, '#FBBF24', { anchor: 'middle', bold: true });
 
   } else if (card.num === 6) {
-    // ETHIOPIA/ERITREA — Lightened warm sand #E6DFC8
+    // ETHIOPIA/ERITREA — Detailed Horn of Africa map
     rect(mx, my, mw, mh, '#E6DFC8', 3);
-    // Horn landmass outline in soft tan
-    R(`<path d="M${mx+25},${my+5} L${mx+65},${my+3} L${mx+mw-10},${my+20} L${mx+mw-5},${my+mh-4} L${mx+60},${my+mh-3} L${mx+18},${my+mh-6} L${mx+10},${my+18} Z" fill="#D9CCA7" stroke="#B8A882" stroke-width="0.5"/>`);
-    // Troop arrows
-    R(`<path d="M${mx+35},${my+10} L${mx+55},${my+18}" fill="none" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="3,2"/>`);
-    R(`<polygon points="${mx+55},${my+18} ${mx+51},${my+14} ${mx+51},${my+22}" fill="#DC2626"/>`);
-    R(`<path d="M${mx+mw-20},${my+28} L${mx+65},${my+22}" fill="none" stroke="#EA580C" stroke-width="1.2" stroke-dasharray="3,2"/>`);
-    R(`<polygon points="${mx+65},${my+22} ${mx+69},${my+18} ${mx+69},${my+26}" fill="#EA580C"/>`);
-    text(mx + 28, my + 8, 'ERITREA', 4, '#1E293B', { bold: true });
-    text(mx + 38, my + mh - 4, 'ETHIOPIA', 4, '#1E293B', { bold: true });
+    // Sea background on right
+    R(`<path d="M${mx+mw-30},${my} L${mx+mw},${my} L${mx+mw},${my+mh} L${mx+mw-20},${my+mh} L${mx+mw-10},${my+mh/2} Z" fill="#CFE3F5"/>`);
+    // Horn landmass with more detail
+    R(`<path d="M${mx+15},${my+5} L${mx+60},${my+2} L${mx+mw-25},${my+8} L${mx+mw-15},${my+mh/2} L${mx+mw-8},${my+mh-8} L${mx+60},${my+mh-3} L${mx+20},${my+mh-5} L${mx+10},${my+22} Z" fill="#D9CCA7" stroke="#B8A882" stroke-width="0.6"/>`);
+    // Border line between Eritrea & Ethiopia
+    line(mx + 20, my + 14, mx + mw - 20, my + 16, '#475569', 0.6, '2,2');
+    // RED SEA label
+    text(mx + mw - 8, my + 10, 'RED SEA', 3.5, '#2563EB', { anchor: 'end', bold: true });
+    // Bold red opposing troop arrows
+    // North arrow (Eritrea → border)
+    R(`<path d="M${mx+30},${my+6} L${mx+48},${my+14}" fill="none" stroke="#DC2626" stroke-width="1.5"/>`);
+    R(`<polygon points="${mx+48},${my+14} ${mx+44},${my+10} ${mx+44},${my+18}" fill="#DC2626"/>`);
+    // South arrow (Ethiopia → border)
+    R(`<path d="M${mx+mw-25},${my+mh-8} L${mx+60},${my+20}" fill="none" stroke="#DC2626" stroke-width="1.5"/>`);
+    R(`<polygon points="${mx+60},${my+20} ${mx+64},${my+16} ${mx+64},${my+24}" fill="#DC2626"/>`);
+    // Labels
+    text(mx + 22, my + 8, 'ERITREA', 4.5, '#1E293B', { bold: true });
+    text(mx + 32, my + mh - 4, 'ETHIOPIA', 4.5, '#1E293B', { bold: true });
+    // Badme marker
+    circle(mx + 52, my + 17, 2, '#DC2626');
+    text(mx + 57, my + 19, 'BADME', 3.5, '#7C2D12', { bold: true });
 
   } else if (card.num === 7) {
-    // FED/DOW — Financial chart
-    rect(mx, my, mw, mh, '#F8FAFC', 3);
-    for (let g = 0; g < 4; g++) line(mx + 6, my + 7 + g * 8, mx + mw - 6, my + 7 + g * 8, '#E2E8F0', 0.4);
-    const pts = [22, 18, 20, 16, 19, 14, 17, 12, 15, 10];
+    // FED/DOW — Crisp cream financial chart with shaded red drop area
+    rect(mx, my, mw, mh, '#FBF9F4', 3);
+    // Horizontal gridlines
+    for (let g = 0; g < 5; g++) line(mx + 5, my + 5 + g * 7, mx + mw - 5, my + 5 + g * 7, '#E2E8F0', 0.5);
+    // Shaded red drop area curve
+    const pts = [22, 20, 21, 18, 20, 16, 18, 14, 16, 10];
     let chartPath = '';
+    let areaPath = '';
     pts.forEach((v, pi) => {
-      const px = mx + 8 + pi * ((mw - 16) / 10);
-      const py = my + mh - 3 - v;
-      chartPath += (pi === 0 ? `M${px},${py}` : ` L${px},${py}`);
+      const cpx = mx + 6 + pi * ((mw - 12) / (pts.length - 1));
+      const cpy = my + mh - 3 - v;
+      chartPath += (pi === 0 ? `M${cpx},${cpy}` : ` L${cpx},${cpy}`);
+      areaPath += (pi === 0 ? `M${cpx},${cpy}` : ` L${cpx},${cpy}`);
     });
+    // Close area path
+    areaPath += ` L${mx + mw - 6},${my + mh - 3} L${mx + 6},${my + mh - 3} Z`;
+    R(`<path d="${areaPath}" fill="#DC2626" opacity="0.12"/>`);
     R(`<path d="${chartPath}" fill="none" stroke="${CRIMSON}" stroke-width="1.5" stroke-linecap="round"/>`);
-    text(mx + mw - 5, my + 12, '\u2212561', 9, CRIMSON, { bold: true, anchor: 'end' });
+    // FED tag
+    rect(mx + 4, my + 3, 18, 8, '#1E293B', 2);
+    text(mx + 13, my + 9.5, 'FED', 4.5, WHITE, { bold: true, anchor: 'middle' });
+    // Bold crimson DOW badge
+    rect(mx + mw - 60, my + 3, 56, 12, CRIMSON, 2);
+    text(mx + mw - 32, my + 12, 'DOW \u2212561 PTS', 5, WHITE, { bold: true, anchor: 'middle' });
 
   } else if (card.num === 8) {
-    // BANGLADESH — Sawtooth factory roof & gate
-    rect(mx, my, mw, mh, '#374151', 3);
+    // BANGLADESH — Warm terracotta/ochre industrial backdrop
+    rect(mx, my, mw, mh, '#8B6914', 3); // Warm ochre
+    rect(mx, my, mw, 8, '#A0522D', 3); // Terracotta sky strip
+    // Sawtooth factory roofs
     let sawPath = `M${mx},${my + mh}`;
-    const peaks = 6;
-    const sawW = mw / peaks;
+    const peaks = 5;
+    const sawW2 = mw / peaks;
     for (let p = 0; p < peaks; p++) {
-      sawPath += ` L${mx + p * sawW + sawW * 0.3},${my + 6} L${mx + (p + 1) * sawW},${my + mh * 0.5}`;
+      sawPath += ` L${mx + p * sawW2 + sawW2 * 0.4},${my + 8} L${mx + (p + 1) * sawW2},${my + mh * 0.5}`;
     }
     sawPath += ` L${mx + mw},${my + mh} Z`;
-    R(`<path d="${sawPath}" fill="#1E293B" opacity="0.8"/>`);
-    for (let g = 0; g < 5; g++) line(mx + 50 + g * 8, my + mh - 12, mx + 50 + g * 8, my + mh - 2, '#6B7280', 1.3);
-    line(mx + 48, my + mh - 8, mx + 92, my + mh - 8, '#6B7280', 0.8);
-    circle(mx + mw - 18, my + mh / 2, 10, CRIMSON, 0.9);
-    text(mx + mw - 18, my + mh / 2 + 4, '55', 9, WHITE, { bold: true, anchor: 'middle' });
+    R(`<path d="${sawPath}" fill="#4B3621" opacity="0.7"/>`);
+    // Barred iron gate
+    for (let g = 0; g < 5; g++) line(mx + 42 + g * 7, my + mh - 14, mx + 42 + g * 7, my + mh - 2, '#374151', 1.5);
+    line(mx + 40, my + mh - 10, mx + 76, my + mh - 10, '#374151', 1);
+    line(mx + 40, my + mh - 6, mx + 76, my + mh - 6, '#374151', 1);
+    // SHUT sign on gate
+    rect(mx + 48, my + mh - 13, 20, 6, '#DC2626', 1);
+    text(mx + 58, my + mh - 8.5, 'SHUT', 3.5, WHITE, { bold: true, anchor: 'middle' });
+    // Protest placards
+    for (const [px2, py2] of [[mx+14,my+mh-18],[mx+24,my+mh-20]]) {
+      line(px2, py2, px2, py2 + 12, '#8B7355', 0.8);
+      rect(px2 - 5, py2 - 5, 10, 6, '#FEF3C7', 1);
+    }
+    // Bold crimson 55 FACTORIES badge
+    rect(mx + mw - 48, my + 2, 46, 12, CRIMSON, 2);
+    text(mx + mw - 25, my + 11, '55 FACTORIES', 4.5, WHITE, { bold: true, anchor: 'middle' });
 
   } else if (card.num === 9) {
-    // US/VENEZUELA — Flags & shield
-    rect(mx, my, mw, mh, '#1E293B', 3);
-    rect(mx + 10, my + 8, 28, 20, '#B22234');
-    for (let s = 0; s < 5; s++) rect(mx + 10, my + 8 + s * 4, 28, 2, WHITE);
-    rect(mx + 10, my + 8, 12, 10, '#3C3B6E');
-    rect(mx + mw - 38, my + 8, 28, 7, '#FBBF24');
-    rect(mx + mw - 38, my + 15, 28, 7, '#003893');
-    rect(mx + mw - 38, my + 22, 28, 6, '#EF4444');
-    const shX = mx + mw / 2, shY = my + mh / 2 + 2;
-    R(`<path d="M${shX},${shY-10} L${shX+8},${shY-7} L${shX+8},${shY+5} L${shX},${shY+10} L${shX-8},${shY+5} L${shX-8},${shY-7} Z" fill="#374151" stroke="#94A3B8" stroke-width="0.5"/>`);
+    // US-VENEZUELA — Warm parchment/blue diplomatic backdrop
+    rect(mx, my, mw, mh, '#E6E1D4', 3);
+    // Blue diplomatic accent bar at top
+    rect(mx, my, mw, 6, '#1D4ED8', 3, 0.3);
+    // US flag on left pole
+    line(mx + 10, my + 4, mx + 10, my + 28, '#64748B', 1);
+    rect(mx + 11, my + 5, 18, 12, '#B22234');
+    for (let s = 0; s < 4; s++) rect(mx + 11, my + 7 + s * 3, 18, 1.5, WHITE);
+    rect(mx + 11, my + 5, 8, 6, '#3C3B6E');
+    // Venezuelan flag on right pole
+    line(mx + mw - 10, my + 4, mx + mw - 10, my + 28, '#64748B', 1);
+    rect(mx + mw - 28, my + 5, 18, 4, '#FBBF24');
+    rect(mx + mw - 28, my + 9, 18, 4, '#003893');
+    rect(mx + mw - 28, my + 13, 18, 4, '#EF4444');
+    // Gold-rimmed diplomatic seal/handshake emblem center
+    const sealX = mx + mw / 2, sealY = my + mh / 2;
+    circle(sealX, sealY, 10, '#D4A843', 0.15);
+    circle(sealX, sealY, 8, 'none', 1, '#D4A843', 0.8);
+    // Handshake icon
+    R(`<path d="M${sealX-5},${sealY} Q${sealX-3},${sealY-3} ${sealX},${sealY} Q${sealX+3},${sealY+3} ${sealX+5},${sealY}" fill="none" stroke="#8B6914" stroke-width="1.2"/>`);
+    R(`<path d="M${sealX-5},${sealY+1} Q${sealX-3},${sealY+4} ${sealX},${sealY+1} Q${sealX+3},${sealY-2} ${sealX+5},${sealY+1}" fill="none" stroke="#8B6914" stroke-width="1.2"/>`);
+    // Dark ribbon caption
+    rect(mx + 6, my + mh - 10, mw - 12, 9, '#1E293B', 2, 0.85);
+    text(mx + mw / 2, my + mh - 3, 'CARACAS \u00B7 DEFENCE PACT', 4, '#F5F1E6', { anchor: 'middle', bold: true });
 
   } else if (card.num === 10) {
-    // COP31 — Plenary seating with reduced radius strictly inside banner
+    // COP31 — Crisp mint-teal UN plenary hall diagram, strictly clipped
     rect(mx, my, mw, mh, '#E0F2FE', 3);
-    const pcx = mx + mw / 2, pcy = my + mh - 4;
-    // Concentric semi-circles centered at bottom of banner, max radius 18px (well within mh=36)
-    for (const r of [7, 11, 15, 19]) {
-      R(`<path d="M${pcx - r},${pcy} A${r},${r} 0 0 1 ${pcx + r},${pcy}" fill="none" stroke="#0891B2" stroke-width="0.7" opacity="0.65"/>`);
+    // Header bar
+    rect(mx, my, mw, 10, '#0891B2', 3, 0.85);
+    text(mx + mw / 2, my + 7.5, 'COP31 DRAFT \u00B7 ANTALYA', 4.5, WHITE, { anchor: 'middle', bold: true });
+    // Curved delegate bench rows (centered, radii well inside mh)
+    const pcx = mx + mw / 2, pcy = my + mh + 2;
+    for (const r of [10, 15, 20, 25]) {
+      R(`<path d="M${pcx - r},${pcy - 4} A${r},${r * 0.5} 0 0 1 ${pcx + r},${pcy - 4}" fill="none" stroke="#0891B2" stroke-width="0.8" opacity="0.55"/>`);
     }
-    // Plenary podium
-    rect(pcx - 7, pcy - 5, 14, 5, '#0891B2', 1);
-    text(pcx, my + 9, 'COP31 DRAFT', 5.5, '#0891B2', { anchor: 'middle', bold: true });
-    text(pcx, my + 18, 'ANTALYA', 4.5, '#64748B', { anchor: 'middle' });
+    // Small delegate dots on benches
+    for (let d = 0; d < 7; d++) {
+      const angle = Math.PI + (d / 6) * Math.PI;
+      const dx = pcx + 13 * Math.cos(angle), dy = pcy - 4 + 7 * Math.sin(angle);
+      if (dy < my + mh - 2) circle(dx, dy, 1, '#0891B2', 0.5);
+    }
+    // Podium
+    rect(pcx - 5, my + mh - 10, 10, 6, '#0891B2', 1);
+    circle(pcx, my + mh - 11, 2, '#0891B2', 0.4);
   }
   R(`</g>`);
 
@@ -656,89 +782,157 @@ row3Cards.forEach((card, i) => {
   R(`<g clip-path="url(#clip-banner-${card.num})">`);
 
   if (card.num === 11) {
-    // JEFFRIES — Capitol dome + 251–11
-    rect(mx, my, mw, mh, '#F0F4FF', 3);
-    const cdx = mx + 30, cdy = my + mh - 4;
-    R(`<path d="M${cdx-22},${cdy} L${cdx-18},${cdy-8} L${cdx-8},${cdy-14} L${cdx-4},${cdy-20} L${cdx},${cdy-24} L${cdx+4},${cdy-20} L${cdx+8},${cdy-14} L${cdx+18},${cdy-8} L${cdx+22},${cdy} Z" fill="#334155" opacity="0.7"/>`);
-    R(`<path d="M${cdx-3},${cdy-24} Q${cdx},${cdy-30} ${cdx+3},${cdy-24}" fill="#334155" opacity="0.7"/>`);
-    const vBarX = mx + mw - 50, vBarW = 40;
+    // JEFFRIES — Crisp light-blue/cream Capitol backdrop with dome & vote bar
+    rect(mx, my, mw, mh, '#E2ECF5', 3);
+    // Cream accent strip
+    rect(mx, my + mh - 6, mw, 6, '#F5F1E6', 0);
+    // Detailed US Capitol dome & columns on left
+    const cdx = mx + 28, cdy = my + mh - 6;
+    // Base/steps
+    R(`<path d="M${cdx-24},${cdy} L${cdx-20},${cdy-4} L${cdx+20},${cdy-4} L${cdx+24},${cdy} Z" fill="#94A3B8" opacity="0.5"/>`);
+    // Columns
+    for (const col of [-14,-7,0,7,14]) {
+      rect(cdx + col - 1.5, cdy - 16, 3, 12, '#475569', 0, 0.6);
+    }
+    // Pediment
+    R(`<path d="M${cdx-20},${cdy-16} L${cdx},${cdy-22} L${cdx+20},${cdy-16}" fill="#475569" opacity="0.65"/>`);
+    // Dome
+    R(`<path d="M${cdx-8},${cdy-22} Q${cdx},${cdy-32} ${cdx+8},${cdy-22}" fill="#334155" opacity="0.7"/>`);
+    // Cupola
+    line(cdx, cdy - 32, cdx, cdy - 35, '#334155', 0.8);
+    circle(cdx, cdy - 35, 1, '#334155', 0.7);
+    // Bold blue/red vote bar on right
+    const vBarX = mx + mw - 50, vBarW = 42;
     const yesW = Math.round((251 / 262) * vBarW);
-    rect(vBarX, my + mh / 2 - 3, yesW, 6, '#2563EB', 2);
-    rect(vBarX + yesW + 1, my + mh / 2 - 3, vBarW - yesW - 1, 6, CRIMSON, 2, 0.5);
-    text(mx + mw - 6, my + 10, '251\u201311', 9, '#1E293B', { bold: true, anchor: 'end' });
+    rect(vBarX, my + mh / 2 - 4, yesW, 8, '#2563EB', 2);
+    rect(vBarX + yesW + 1, my + mh / 2 - 4, vBarW - yesW - 1, 8, CRIMSON, 2, 0.6);
+    // 251-11 VOTE badge
+    rect(mx + mw - 52, my + 2, 48, 11, '#1E293B', 2, 0.85);
+    text(mx + mw - 28, my + 10.5, '251\u201311 VOTE', 5, WHITE, { bold: true, anchor: 'middle' });
 
   } else if (card.num === 12) {
-    // ANTHROPIC IPO — Lightened cream chart #F4F1EA
-    rect(mx, my, mw, mh, '#F4F1EA', 3);
-    for (let g = 0; g < 4; g++) line(mx + 6, my + 7 + g * 8, mx + mw - 6, my + 7 + g * 8, '#E2E8F0', 0.5);
-    const pts = [26, 24, 22, 20, 17, 14, 10, 6];
+    // ANTHROPIC IPO — Dark-slate/emerald financial terminal card
+    rect(mx, my, mw, mh, '#1A2332', 3);
+    // Terminal gridlines
+    for (let g = 0; g < 4; g++) line(mx + 5, my + 7 + g * 7, mx + mw - 5, my + 7 + g * 7, '#2D3B4A', 0.5);
+    // Rising emerald area curve
+    const pts = [26, 24, 22, 19, 16, 13, 9, 5];
     let tp = '';
+    let areaP = '';
     pts.forEach((v, pi) => {
-      const px = mx + 6 + pi * ((mw - 12) / 8);
-      const py = my + 3 + v;
-      tp += (pi === 0 ? `M${px},${py}` : ` L${px},${py}`);
+      const cpx = mx + 5 + pi * ((mw - 10) / (pts.length - 1));
+      const cpy = my + 2 + v;
+      tp += (pi === 0 ? `M${cpx},${cpy}` : ` L${cpx},${cpy}`);
+      areaP += (pi === 0 ? `M${cpx},${cpy}` : ` L${cpx},${cpy}`);
     });
-    R(`<path d="${tp}" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round"/>`);
-    circle(mx + 6 + 7 * ((mw - 12) / 8), my + 9, 2.5, '#16A34A');
-    text(mx + mw - 5, my + 11, '$83', 10, '#15803D', { bold: true, anchor: 'end' });
-    // Horizontal clean label
-    text(mx + mw / 2, my + mh - 5, '$81bn IPO', 5.5, '#334155', { anchor: 'middle', bold: true });
+    areaP += ` L${mx + mw - 5},${my + mh - 2} L${mx + 5},${my + mh - 2} Z`;
+    R(`<path d="${areaP}" fill="#16A34A" opacity="0.15"/>`);
+    R(`<path d="${tp}" fill="none" stroke="#22C55E" stroke-width="1.8" stroke-linecap="round"/>`);
+    // End dot
+    circle(mx + mw - 5, my + 7, 2.5, '#22C55E');
+    // NASDAQ: ANT label
+    text(mx + 4, my + 10, 'NASDAQ: ANT', 4, '#4ADE80', { bold: true });
+    // Bold callout badge
+    rect(mx + mw - 60, my + mh - 12, 56, 10, '#16A34A', 2, 0.9);
+    text(mx + mw - 32, my + mh - 4, '$81bn IPO \u00B7 $83', 4.5, WHITE, { bold: true, anchor: 'middle' });
 
   } else if (card.num === 13) {
-    // CYCLONE AKVAN — Pale ocean #DCEAF7 & India coast #E5DEC9
-    rect(mx, my, mw, mh, '#DCEAF7', 3);
-    // India coastline
-    R(`<path d="M${mx+mw-26},${my} L${mx+mw-20},${my+10} L${mx+mw-16},${my+18} L${mx+mw-23},${my+24} L${mx+mw-18},${my+mh} L${mx+mw},${my+mh} L${mx+mw},${my} Z" fill="#E5DEC9" stroke="#C7BC9F" stroke-width="0.6"/>`);
-    const scx = mx + mw / 2 - 12, scy = my + mh / 2;
-    for (let r = 4; r <= 16; r += 3) circle(scx, scy, r, 'none', 0.6 - r * 0.015, '#0284C7', 0.8);
+    // CYCLONE AKVAN — Pale blue Bay of Bengal map
+    rect(mx, my, mw, mh, '#D6E8F7', 3);
+    // India/Odisha coast on right
+    R(`<path d="M${mx+mw-28},${my} L${mx+mw-22},${my+8} L${mx+mw-18},${my+16} L${mx+mw-24},${my+22} L${mx+mw-20},${my+mh} L${mx+mw},${my+mh} L${mx+mw},${my} Z" fill="#E5DEC9" stroke="#C7BC9F" stroke-width="0.6"/>`);
+    // Coast labels
+    text(mx + mw - 6, my + 10, 'INDIA', 3.5, '#475569', { anchor: 'end', bold: true });
+    text(mx + mw - 6, my + 18, 'ODISHA', 3.5, '#7C2D12', { anchor: 'end', bold: true });
+    // Multi-arm spiral storm vortex
+    const scx = mx + mw / 2 - 14, scy = my + mh / 2;
+    for (let r = 4; r <= 16; r += 3) circle(scx, scy, r, 'none', 0.55 - r * 0.015, '#0284C7', 0.9);
     circle(scx, scy, 2.5, '#0369A1', 0.9);
-    // Track arrow
-    R(`<path d="M${scx + 12},${scy - 4} L${mx + mw - 30},${my + 14}" fill="none" stroke="#DC2626" stroke-width="1.2" stroke-dasharray="3,2"/>`);
-    R(`<polygon points="${mx+mw-30},${my+14} ${mx+mw-34},${my+10} ${mx+mw-34},${my+18}" fill="#DC2626"/>`);
-    text(mx + 4, my + mh - 4, 'TRACK \u2192 ODISHA', 4.5, '#B91C1C', { bold: true });
+    // Spiral arms
+    for (let arm = 0; arm < 3; arm++) {
+      const a0 = arm * (Math.PI * 2 / 3);
+      let sp = '';
+      for (let t = 0; t <= 12; t++) {
+        const angle = a0 + t * 0.3;
+        const rr = 3 + t * 1.1;
+        const sx2 = scx + rr * Math.cos(angle), sy2 = scy + rr * Math.sin(angle);
+        sp += (t === 0 ? `M${sx2},${sy2}` : ` L${sx2},${sy2}`);
+      }
+      R(`<path d="${sp}" fill="none" stroke="#0284C7" stroke-width="0.6" opacity="0.5"/>`);
+    }
+    // Bold red track arrow
+    R(`<path d="M${scx + 14},${scy - 5} L${mx + mw - 32},${my + 12}" fill="none" stroke="#DC2626" stroke-width="1.5"/>`);
+    R(`<polygon points="${mx+mw-32},${my+12} ${mx+mw-36},${my+8} ${mx+mw-36},${my+16}" fill="#DC2626"/>`);
 
   } else if (card.num === 14) {
-    // GTA VI — Vice City sunset
+    // GTA VI — Vibrant Vice City sunset gradient, palm silhouettes, neon badge
     R(`<rect x="${mx}" y="${my}" width="${mw}" height="${mh}" rx="3" fill="url(#gVice)"/>`);
-    circle(mx + mw / 2, my + mh - 7, 9, '#FBBF24', 0.8);
-    circle(mx + mw / 2, my + mh - 7, 12, '#FBBF24', 0.2);
-    line(mx, my + mh - 5, mx + mw, my + mh - 5, '#1E1E1E', 0.8);
-    rect(mx, my + mh - 5, mw, 5, '#1E1E1E', 0, 0.4);
-    for (const psx of [mx + 12, mx + mw - 16]) {
-      R(`<path d="M${psx},${my+mh-5} Q${psx+2},${my+mh-16} ${psx+1},${my+7}" fill="none" stroke="#000000" stroke-width="1.3"/>`);
-      R(`<path d="M${psx+1},${my+7} Q${psx-8},${my+4} ${psx-12},${my+9}" fill="none" stroke="#000000" stroke-width="0.8"/>`);
-      R(`<path d="M${psx+1},${my+7} Q${psx+10},${my+4} ${psx+14},${my+9}" fill="none" stroke="#000000" stroke-width="0.8"/>`);
+    // Glowing sun disc
+    circle(mx + mw / 2, my + mh - 6, 10, '#FBBF24', 0.7);
+    circle(mx + mw / 2, my + mh - 6, 14, '#FBBF24', 0.15);
+    // Horizon & water
+    line(mx, my + mh - 4, mx + mw, my + mh - 4, '#1E1E1E', 0.8);
+    rect(mx, my + mh - 4, mw, 4, '#1E1E1E', 0, 0.5);
+    // Black palm silhouettes
+    for (const psx of [mx + 10, mx + mw - 14]) {
+      R(`<path d="M${psx},${my+mh-4} Q${psx+1},${my+mh-14} ${psx+2},${my+6}" fill="none" stroke="#000000" stroke-width="1.5"/>`);
+      R(`<path d="M${psx+2},${my+6} Q${psx-8},${my+2} ${psx-13},${my+8}" fill="none" stroke="#000000" stroke-width="0.9"/>`);
+      R(`<path d="M${psx+2},${my+6} Q${psx+12},${my+2} ${psx+15},${my+8}" fill="none" stroke="#000000" stroke-width="0.9"/>`);
+      R(`<path d="M${psx+2},${my+6} Q${psx+6},${my-2} ${psx+10},${my+4}" fill="none" stroke="#000000" stroke-width="0.7"/>`);
     }
-    text(mx + mw / 2, my + mh - 10, '00:00 NZ FIRST', 5, WHITE, { anchor: 'middle', bold: true });
+    // Game controller icon (simplified)
+    const gcx = mx + mw / 2 - 20, gcy = my + 8;
+    R(`<path d="M${gcx},${gcy} Q${gcx+4},${gcy-3} ${gcx+10},${gcy} Q${gcx+6},${gcy+5} ${gcx},${gcy}" fill="#000000" opacity="0.5"/>`);
+    // Retro neon badge
+    rect(mx + mw / 2 - 32, my + mh - 14, 64, 10, '#000000', 2, 0.7);
+    text(mx + mw / 2, my + mh - 6.5, 'GTA VI \u00B7 00:00 NZ', 4.5, '#F97316', { anchor: 'middle', bold: true });
 
   } else if (card.num === 15) {
-    // UK INFLATION — 3.6% cleanly ABOVE the tallest bar
+    // UK INFLATION — Clean gridline bar chart with contrast bars, 3.6% above
     rect(mx, my, mw, mh, '#F8FAFC', 3);
-    for (let g = 0; g < 4; g++) line(mx + 5, my + 7 + g * 7, mx + mw - 5, my + 7 + g * 7, '#E2E8F0', 0.4);
-    // Scaled bar heights so tallest bar reaches y = my + 17, leaving room for 3.6% above it at my + 11
+    for (let g = 0; g < 4; g++) line(mx + 4, my + 7 + g * 7, mx + mw - 4, my + 7 + g * 7, '#E2E8F0', 0.4);
+    // Gray/blue bars with final crimson bar
     const barVals = [7, 6, 8, 7, 9, 8, 11, 13, 16];
+    const barCount = barVals.length;
+    const barSpacing = (mw - 10) / barCount;
     barVals.forEach((v, bi) => {
-      const bx = mx + 6 + bi * ((mw - 14) / barVals.length);
-      const bh = v;
-      const bColor = bi === barVals.length - 1 ? CRIMSON : '#2563EB';
-      rect(bx, my + mh - 3 - bh, 8, bh, bColor, 1, bi === barVals.length - 1 ? 1 : 0.4);
+      const bx2 = mx + 5 + bi * barSpacing;
+      const bColor = bi === barCount - 1 ? CRIMSON : (bi % 2 === 0 ? '#94A3B8' : '#2563EB');
+      const bOpacity = bi === barCount - 1 ? 1 : 0.5;
+      rect(bx2, my + mh - 3 - v, barSpacing - 2, v, bColor, 1, bOpacity);
     });
-    // 3.6% cleanly positioned above tallest bar with zero overlap
-    text(mx + mw - 5, my + 11, '3.6%', 9.5, CRIMSON, { bold: true, anchor: 'end' });
+    // 3.5% label on second-to-last bar
+    text(mx + 5 + (barCount - 2) * barSpacing + barSpacing / 2, my + mh - 3 - 13 - 3, '3.5%', 3.5, '#475569', { anchor: 'middle' });
+    // Bold 3.6% cleanly ABOVE the tallest bar with zero overlap
+    text(mx + mw - 4, my + 10, '3.6%', 10, CRIMSON, { bold: true, anchor: 'end' });
 
   } else if (card.num === 16) {
-    // AMNESTY RSF & WHO — Warm stone #E8E2D5
+    // SUDAN RSF / DR CONGO EBOLA — Warm parchment/stone split medical-security banner
     rect(mx, my, mw, mh, '#E8E2D5', 3);
-    // Crimson cross
-    const rcx = mx + 22, rcy = my + mh / 2;
-    rect(rcx - 2.5, rcy - 8, 5, 16, '#DC2626', 1);
-    rect(rcx - 8, rcy - 2.5, 16, 5, '#DC2626', 1);
-    circle(rcx, rcy, 11, 'none', 0.3, '#DC2626', 0.8);
-    // Dark shield
-    const shx = mx + mw - 25, shy = my + mh / 2;
-    R(`<path d="M${shx},${shy-10} L${shx+8},${shy-12} L${shx+10},${shy} L${shx+8},${shy+12} L${shx},${shy+10} L${shx-2},${shy} Z" fill="#334155" stroke="#1E293B" stroke-width="0.6"/>`);
-    R(`<path d="M${shx+2},${shy-8} L${shx+4},${shy-1} L${shx+2},${shy+4} L${shx+5},${shy+8}" fill="none" stroke="#E2E8F0" stroke-width="0.6"/>`);
-    text(mx + mw / 2, my + mh - 4, 'SUDAN \u00B7 DR CONGO', 4.5, '#475569', { anchor: 'middle', bold: true });
+    const splitX = mx + mw / 2;
+    // LEFT: Hospital/medical side
+    // Hospital roof
+    R(`<path d="M${mx+6},${my+mh-6} L${mx+6},${my+10} L${mx+16},${my+6} L${mx+splitX-mx-6},${my+10} L${mx+splitX-mx-6},${my+mh-6} Z" fill="#D4CFC5"/>`);
+    // Crimson medical cross
+    const rcx2 = mx + (splitX - mx) / 2, rcy2 = my + mh / 2 - 2;
+    rect(rcx2 - 2, rcy2 - 7, 4, 14, '#DC2626', 1);
+    rect(rcx2 - 7, rcy2 - 2, 14, 4, '#DC2626', 1);
+    circle(rcx2, rcy2, 10, 'none', 0.25, '#DC2626', 0.8);
+    // 11,300+ CASES badge
+    rect(mx + 2, my + mh - 10, splitX - mx - 4, 9, CRIMSON, 2, 0.85);
+    text(mx + (splitX - mx) / 2, my + mh - 3, '11,300+ CASES', 4, WHITE, { bold: true, anchor: 'middle' });
+    // Divider
+    line(splitX, my + 2, splitX, my + mh - 2, '#94A3B8', 0.6);
+    // RIGHT: Dark slate shield / security
+    rect(splitX, my, mw / 2, mh, '#334155', 0, 0.3);
+    const shx2 = splitX + (mw / 2) / 2, shy2 = my + mh / 2 - 2;
+    // Shield shape
+    R(`<path d="M${shx2},${shy2-11} L${shx2+9},${shy2-8} L${shx2+9},${shy2+4} L${shx2},${shy2+11} L${shx2-9},${shy2+4} L${shx2-9},${shy2-8} Z" fill="#475569" stroke="#1E293B" stroke-width="0.7"/>`);
+    // Lightning bolt on shield
+    R(`<path d="M${shx2-2},${shy2-6} L${shx2+2},${shy2-1} L${shx2-1},${shy2} L${shx2+3},${shy2+6}" fill="none" stroke="#E2E8F0" stroke-width="0.8"/>`);
+    // EL OBEID label
+    rect(splitX + 2, my + mh - 10, mw / 2 - 4, 9, '#1E293B', 2, 0.85);
+    text(splitX + mw / 4, my + mh - 3, 'EL OBEID', 4, '#E2E8F0', { bold: true, anchor: 'middle' });
   }
   R(`</g>`);
 
@@ -767,7 +961,7 @@ line(8, ROW3_Y + ROW3_H + 2, W - 8, ROW3_Y + ROW3_H + 2, CHARCOAL, 0.8);
 // ═══════════════════════════════════════════════════════════════════════════
 // 3. FULL-WIDTH WORLD MAP & 3-COLUMN BRIEFS (y=614..952)
 // ═══════════════════════════════════════════════════════════════════════════
-const SEC3_Y = 614;
+const SEC3_Y = 612;
 const SEC3_H = 952 - SEC3_Y;
 
 // Section header bar
@@ -777,7 +971,7 @@ text(352, SEC3_Y + 10.5, 'ALSO ON WEDNESDAY 18 NOVEMBER \u2014 25 MORE STORIES',
 
 // ── Left Panel: World Map (x=8..344, y=628..950) ─────────────────────────
 const MAP_X = 8, MAP_Y = SEC3_Y + 16, MAP_W = 338, MAP_H = SEC3_H - 18;
-rect(MAP_X, MAP_Y, MAP_W, MAP_H, PARCHMENT, 2);
+rect(MAP_X, MAP_Y, MAP_W, MAP_H, '#EAE5D8', 2);
 R(`<rect x="${MAP_X}" y="${MAP_Y}" width="${MAP_W}" height="${MAP_H}" rx="2" fill="none" stroke="${CHARCOAL}" stroke-width="0.7"/>`);
 
 // Latitude/longitude grid spanning y=650..895
@@ -789,12 +983,12 @@ for (let lx = MAP_X + 25; lx <= MAP_X + MAP_W - 10; lx += 36) {
 }
 
 // ── DOT-MATRIX continents stretched vertically (y=650..895) ─────────────
-const dotR = 1.4;
-const dotColor = '#9E9484';
+const dotR = 1.75;
+const dotColor = '#6E6659';
 
 function dotContinent(cx0: number, cy0: number, cw: number, ch: number, shape: number[][]) {
   for (const [fx, fy] of shape) {
-    circle(cx0 + fx * cw, cy0 + fy * ch, dotR, dotColor, 0.65);
+    circle(cx0 + fx * cw, cy0 + fy * ch, dotR, dotColor, 0.8);
   }
 }
 
