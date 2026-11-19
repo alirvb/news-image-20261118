@@ -943,8 +943,10 @@ const pngData = resvg.render();
 const pngBuffer = pngData.asPng();
 
 writeFileSync(join(outDir, 'entry.png'), pngBuffer);
-writeFileSync(join(ROOT, 'entry.png'), pngBuffer);
-writeFileSync(join(ROOT, 'entry.svg'), svg);
+try {
+  writeFileSync(join(ROOT, 'entry.png'), pngBuffer);
+  writeFileSync(join(ROOT, 'entry.svg'), svg);
+} catch {}
 
 console.log(`Generated 40-story broadsheet PNG: ${pngBuffer.length} bytes (${(pngBuffer.length / 1024).toFixed(1)} KB)`);
 console.log(`Dimensions: ${W}x${H}`);
